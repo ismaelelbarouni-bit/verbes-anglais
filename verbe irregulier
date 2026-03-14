@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Jeux Verbes Irréguliers 🎮</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070f;--surf:#0f0f1e;--surf2:#16162a;--bord:#1e1e38;
+  --c1:#ff4757;--c2:#2ed573;--c3:#ffa502;--c4:#1e90ff;
+  --c5:#ff6b81;--c6:#eccc68;--c7:#7bed9f;--c8:#a29bfe;
+  --tx:#f1f2f6;--dim:#57577a;
+  --fh:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--tx);font-family:var(--fh);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 40% at 15% 5%,rgba(30,144,255,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 95%,rgba(255,71,87,.06) 0%,transparent 60%);}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(7,7,15,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--bord);padding:10px 14px;}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.logo{font-size:clamp(13px,2.5vw,18px);font-weight:900;letter-spacing:-1px;white-space:nowrap;flex-shrink:0;}
+.logo span{color:var(--c1);}
+.nav-games{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex:1;-webkit-overflow-scrolling:touch;}
+.nav-games::-webkit-scrollbar{display:none;}
+.nb{flex-shrink:0;padding:6px 11px;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;font-family:var(--fh);font-size:clamp(10px,1.7vw,12px);font-weight:700;color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.nb:hover{color:var(--tx);}
+.nb.active{color:#fff;}
+.nb0.active{background:var(--surf2);border-color:var(--dim);color:var(--tx);}
+.nb1.active{background:var(--c1);border-color:var(--c1);}
+.nb2.active{background:var(--c2);border-color:var(--c2);color:#000;}
+.nb3.active{background:var(--c3);border-color:var(--c3);color:#000;}
+.nb4.active{background:var(--c4);border-color:var(--c4);}
+.nb5.active{background:var(--c8);border-color:var(--c8);color:#000;}
+.nb6.active{background:var(--c5);border-color:var(--c5);}
+.nb7.active{background:var(--c6);border-color:var(--c6);color:#000;}
+.nb8.active{background:var(--c7);border-color:var(--c7);color:#000;}
+
+/* SCREENS */
+.screen{display:none;position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:18px 14px 70px;}
+.screen.active{display:block;}
+
+/* HOME */
+.home-hero{text-align:center;padding:26px 0 36px;}
+.home-hero h1{font-size:clamp(36px,9vw,82px);font-weight:900;line-height:.9;letter-spacing:-3px;margin-bottom:12px;}
+.g{background:linear-gradient(135deg,var(--c4),var(--c8),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.home-hero p{color:var(--dim);font-family:var(--fm);font-size:12px;max-width:460px;margin:0 auto 12px;line-height:1.9;}
+.sync-notice{display:inline-flex;align-items:center;gap:8px;background:rgba(162,155,254,.1);border:1px solid rgba(162,155,254,.3);border-radius:20px;padding:8px 16px;font-family:var(--fm);font-size:11px;color:var(--c8);margin-bottom:30px;}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:13px;}
+.gc{background:var(--surf);border:1px solid var(--bord);border-radius:16px;padding:22px 18px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.gc:hover{transform:translateY(-4px);box-shadow:0 14px 48px rgba(0,0,0,.5);}
+.gc1:hover{border-color:var(--c1);} .gc2:hover{border-color:var(--c2);} .gc3:hover{border-color:var(--c3);} .gc4:hover{border-color:var(--c4);} .gc5:hover{border-color:var(--c8);} .gc6:hover{border-color:var(--c5);} .gc7:hover{border-color:var(--c6);} .gc8:hover{border-color:var(--c7);}
+.gc .gi{font-size:34px;margin-bottom:10px;}
+.gc .gt{font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-weight:700;}
+.gc1 .gt{color:var(--c1);}.gc2 .gt{color:var(--c2);}.gc3 .gt{color:var(--c3);}.gc4 .gt{color:var(--c4);}.gc5 .gt{color:var(--c8);}.gc6 .gt{color:var(--c5);}.gc7 .gt{color:var(--c6);}.gc8 .gt{color:var(--c7);}
+.gc h3{font-size:clamp(15px,3vw,19px);font-weight:800;margin-bottom:6px;}
+.gc p{font-family:var(--fm);font-size:11px;color:var(--dim);line-height:1.65;}
+.pb{margin-top:12px;display:inline-block;padding:7px 16px;border-radius:9px;font-family:var(--fh);font-weight:700;font-size:12px;}
+.gc1 .pb{background:var(--c1);color:#fff;}.gc2 .pb{background:var(--c2);color:#000;}.gc3 .pb{background:var(--c3);color:#000;}.gc4 .pb{background:var(--c4);color:#fff;}.gc5 .pb{background:var(--c8);color:#000;}.gc6 .pb{background:var(--c5);color:#fff;}.gc7 .pb{background:var(--c6);color:#000;}.gc8 .pb{background:var(--c7);color:#000;}
+
+/* SHARED */
+.gh{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.bk{padding:7px 13px;background:var(--surf2);border:1px solid var(--bord);border-radius:9px;font-family:var(--fh);font-weight:700;font-size:12px;color:var(--dim);cursor:pointer;transition:all .2s;flex-shrink:0;}
+.bk:hover{color:var(--tx);}
+.gtit{font-size:clamp(17px,4vw,26px);font-weight:900;letter-spacing:-1px;}
+.gs{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap;}
+.sc{padding:5px 11px;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;font-family:var(--fm);font-size:11px;color:var(--dim);}
+.sc span{font-weight:700;}
+.bpri{padding:11px 24px;border:none;border-radius:11px;font-family:var(--fh);font-weight:800;font-size:14px;cursor:pointer;transition:all .2s;}
+.bpri:hover{transform:translateY(-2px);}
+.bgho{padding:10px 20px;background:var(--surf2);border:1px solid var(--bord);border-radius:11px;font-family:var(--fh);font-weight:700;font-size:13px;color:var(--dim);cursor:pointer;transition:all .2s;}
+.bgho:hover{color:var(--tx);border-color:var(--dim);}
+.pbar{height:4px;background:var(--surf2);border-radius:4px;margin-bottom:18px;overflow:hidden;}
+.pfill{height:100%;border-radius:4px;transition:width .3s;}
+.mb{padding:7px 15px;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;font-family:var(--fm);font-size:11px;color:var(--dim);cursor:pointer;transition:all .2s;}
+.mb.active{background:var(--c8);border-color:var(--c8);color:#000;}
+.mb:hover:not(.active){border-color:var(--dim);color:var(--tx);}
+
+/* BOTH FORMS BADGE — clé du concept */
+.both-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(162,155,254,.12);border:1px solid rgba(162,155,254,.4);
+  border-radius:20px;padding:5px 12px;font-family:var(--fm);font-size:10px;color:var(--c8);
+  margin-bottom:14px;letter-spacing:1px;
+}
+/* Two-form input group */
+.two-forms{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-field{display:flex;flex-direction:column;gap:5px;}
+.form-field label{font-family:var(--fm);font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+.qinp{width:100%;padding:12px 14px;background:var(--bg);border:2px solid var(--bord);border-radius:11px;color:var(--tx);font-family:var(--fm);font-size:13px;outline:none;transition:border-color .2s;text-align:center;}
+.qinp:focus{border-color:var(--c8);}
+.qinp.ok{border-color:var(--c2);color:var(--c2);}
+.qinp.ko{border-color:var(--c1);color:var(--c1);}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-14px);background:var(--surf2);border:1px solid var(--bord);border-radius:11px;padding:8px 16px;font-family:var(--fm);font-size:12px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--c2);color:var(--c2);}
+.toast.ko{border-color:var(--c1);color:var(--c1);}
+
+/* RESULT */
+.rov{position:fixed;inset:0;background:rgba(7,7,15,.96);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.rov.show{display:flex;}
+.rbox{background:var(--surf);border:2px solid var(--bord);border-radius:22px;padding:clamp(26px,6vw,50px);text-align:center;max-width:440px;width:100%;}
+.rbox .rn{font-size:clamp(58px,13vw,94px);font-weight:900;line-height:1;}
+.rbox .rl{font-family:var(--fm);font-size:12px;color:var(--dim);margin:7px 0 20px;}
+.racts{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+
+/* ══ FLASH ══ */
+.flash-area{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.flash-mode-btns{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;}
+.fcard{width:100%;max-width:520px;min-height:clamp(190px,36vw,270px);background:var(--surf);border:2px solid var(--bord);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .3s;position:relative;overflow:hidden;perspective:1000px;}
+.fcard:hover{border-color:var(--c1);}
+.fc-f,.fc-b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;backface-visibility:hidden;transition:transform .4s;}
+.fc-b{transform:rotateY(180deg);}
+.fcard.flipped .fc-f{transform:rotateY(-180deg);}
+.fcard.flipped .fc-b{transform:rotateY(0);}
+.fc-prompt{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.fc-word{font-size:clamp(24px,6vw,42px);font-weight:900;color:var(--c1);letter-spacing:-1px;text-align:center;}
+.fc-sub{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:6px;text-align:center;}
+/* answer shows BOTH forms prominently */
+.fc-ans{text-align:center;width:100%;}
+.fc-ans .fa-inf{font-size:clamp(16px,3.5vw,24px);font-weight:900;color:var(--c2);margin-bottom:12px;}
+.fc-ans .fa-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;}
+.fa-box{padding:10px;background:var(--bg);border-radius:10px;border:1px solid var(--bord);}
+.fa-box .fl{font-family:var(--fm);font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;}
+.fa-box .fv{font-family:var(--fm);font-size:clamp(13px,2.5vw,16px);font-weight:700;}
+.fa-box.pret .fv{color:var(--c3);}
+.fa-box.pp .fv{color:var(--c5);}
+.fc-fr{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:10px;}
+.rbtns{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.fnav{display:flex;align-items:center;gap:12px;}
+.fnav button{width:40px;height:40px;border-radius:50%;background:var(--surf2);border:1px solid var(--bord);color:var(--tx);font-size:15px;cursor:pointer;transition:all .2s;}
+.fnav button:hover{background:var(--c1);border-color:var(--c1);}
+.fctr{font-family:var(--fm);font-size:12px;color:var(--dim);}
+.fctr span{color:var(--tx);font-weight:700;}
+
+/* ══ ASSOCIATION ══ */
+.assoc-container{max-width:900px;margin:0 auto;}
+.assoc-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.assoc-timer{font-size:clamp(26px,6vw,44px);font-weight:900;color:var(--c3);font-family:var(--fm);}
+.assoc-timer.danger{color:var(--c1);animation:pulse .5s infinite alternate;}
+@keyframes pulse{from{opacity:1}to{opacity:.4}}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.assoc-col{display:flex;flex-direction:column;gap:7px;}
+.col-title{font-family:var(--fm);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:3px;}
+/* Each item shows BOTH prét+pp when relevant */
+.aitem{padding:clamp(9px,2vw,13px);background:var(--surf);border:2px solid var(--bord);border-radius:11px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;}
+.aitem:hover{border-color:var(--c3);}
+.aitem.sel{border-color:var(--c3);background:rgba(255,165,2,.1);}
+.aitem.matched{border-color:var(--c2);background:rgba(46,213,115,.08);cursor:default;animation:pop .3s ease;}
+.aitem.wrong{border-color:var(--c1);background:rgba(255,71,87,.08);animation:shake .3s;}
+@keyframes pop{0%{transform:scale(.95)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.aitem .am{font-family:var(--fm);font-size:clamp(12px,2vw,14px);font-weight:700;color:var(--tx);}
+.aitem .ap{font-family:var(--fm);font-size:9px;color:var(--dim);margin-top:3px;}/* sub: both forms */
+.aitem.matched .am{color:var(--c2);}
+.aitem.matched .ap{color:rgba(46,213,115,.5);}
+.assoc-mbts{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;}
+.assoc-start{text-align:center;padding:36px 20px;}
+
+/* ══ SNIPER ══ */
+.sn-arena{width:100%;height:clamp(300px,50vw,440px);background:var(--surf);border:2px solid var(--bord);border-radius:16px;overflow:hidden;position:relative;margin-bottom:12px;}
+.sn-arena::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--c1);box-shadow:0 0 14px var(--c1);}
+/* Falling item shows BOTH forms */
+.fw{position:absolute;top:-70px;background:var(--surf2);border:1px solid var(--bord);border-radius:10px;padding:6px 12px;cursor:pointer;transition:background .1s;white-space:nowrap;text-align:center;}
+.fw:hover{background:rgba(30,144,255,.3);}
+.fw .fw-pret{font-family:var(--fm);font-size:clamp(11px,2vw,13px);font-weight:700;color:var(--tx);}
+.fw .fw-pp{font-family:var(--fm);font-size:9px;color:var(--dim);}
+.sn-target-area{background:var(--surf);border:2px solid var(--bord);border-radius:13px;padding:14px;text-align:center;margin-bottom:11px;}
+.sn-target{font-size:clamp(20px,5vw,36px);font-weight:900;color:var(--c4);}
+.sn-sub{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:3px;}
+.sn-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.ss{padding:7px 13px;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;font-family:var(--fm);font-size:11px;color:var(--dim);}
+.ss span{font-weight:700;}
+
+/* ══ MEMORY ══ */
+.mem-ctrl{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.mgrid{display:grid;gap:8px;width:100%;}
+.mgrid.g4{grid-template-columns:repeat(4,1fr);}
+.mgrid.g8{grid-template-columns:repeat(4,1fr);}
+@media(min-width:600px){.mgrid.g8{grid-template-columns:repeat(8,1fr);}}
+.mgrid.g12{grid-template-columns:repeat(4,1fr);}
+@media(min-width:600px){.mgrid.g12{grid-template-columns:repeat(6,1fr);}}
+.mcard{aspect-ratio:3/4;background:var(--surf2);border:2px solid var(--bord);border-radius:10px;cursor:pointer;transition:transform .3s;position:relative;transform-style:preserve-3d;}
+.mcard:hover{border-color:var(--c8);}
+.mcard.flipped,.mcard.matched{transform:rotateY(180deg);}
+.mf,.mb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:8px;backface-visibility:hidden;text-align:center;}
+.mf{background:var(--surf2);}
+.mf .mi{font-size:24px;}
+.mb{background:var(--surf);border:2px solid var(--c8);transform:rotateY(180deg);}
+.mb .mct{font-family:var(--fm);font-size:7px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:3px;}
+/* When type=pair show BOTH pret+pp stacked */
+.mb .mcv{font-family:var(--fm);font-size:clamp(9px,1.7vw,12px);font-weight:700;color:var(--tx);line-height:1.4;}
+.mb .mcv .pret-c{color:var(--c3);}
+.mb .mcv .pp-c{color:var(--c5);font-size:.85em;}
+.mcard.matched .mb{background:rgba(46,213,115,.1);border-color:var(--c2);}
+
+/* ══ CHAIN ══ */
+.chain-area{max-width:640px;margin:0 auto;}
+.cvd{background:var(--surf);border:2px solid var(--bord);border-radius:16px;padding:22px;text-align:center;margin-bottom:16px;}
+.cvl{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:9px;}
+.cvw{font-size:clamp(26px,6vw,46px);font-weight:900;color:var(--c8);letter-spacing:-2px;}
+.cvf{font-family:var(--fm);font-size:11px;color:var(--dim);margin-top:4px;}
+.ch-slots{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:16px;}
+@media(max-width:460px){.ch-slots{grid-template-columns:1fr;}}
+.cslot{padding:12px 8px;background:var(--surf);border:2px dashed var(--bord);border-radius:12px;text-align:center;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:all .2s;}
+.cslot.drag-over{border-color:var(--c8);background:rgba(162,155,254,.08);}
+.cslot.filled{border-style:solid;border-color:var(--c8);}
+.cslot.correct{border-color:var(--c2);background:rgba(46,213,115,.07);}
+.cslot.wrong{border-color:var(--c1);background:rgba(255,71,87,.07);}
+.sl{font-family:var(--fm);font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+.sv{font-family:var(--fm);font-size:clamp(11px,2.5vw,14px);font-weight:700;color:var(--tx);}
+.ctiles{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:13px;}
+/* tile shows BOTH forms when it's the pret/pp pair */
+.ctile{padding:8px 14px;background:var(--surf2);border:2px solid var(--bord);border-radius:9px;font-family:var(--fm);font-size:clamp(10px,2vw,13px);font-weight:700;cursor:grab;transition:all .2s;color:var(--tx);user-select:none;text-align:center;}
+.ctile:hover{border-color:var(--c8);}
+.ctile.selected{border-color:var(--c8);background:rgba(162,155,254,.18);}
+.ctile.used{opacity:.3;cursor:not-allowed;}
+.ctile .ct-sub{font-size:8px;color:var(--dim);font-weight:400;margin-top:2px;}
+.ch-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+
+/* ══ TRADUCTEUR ══ */
+.trans-area{max-width:540px;margin:0 auto;}
+.tcard{background:var(--surf);border:2px solid var(--bord);border-radius:20px;padding:clamp(18px,4vw,36px);text-align:center;margin-bottom:16px;}
+.tdir{display:inline-flex;gap:6px;align-items:center;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;padding:5px 13px;font-family:var(--fm);font-size:10px;color:var(--dim);margin-bottom:16px;letter-spacing:1px;}
+.tql{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.tq{font-size:clamp(24px,6vw,44px);font-weight:900;color:var(--c5);letter-spacing:-1px;margin-bottom:4px;}
+.th{font-family:var(--fm);font-size:10px;color:var(--dim);margin-bottom:18px;}
+.tfields{display:flex;flex-direction:column;gap:9px;}
+.tfield label{font-family:var(--fm);font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:4px;}
+.tinp{width:100%;padding:11px 13px;background:var(--bg);border:2px solid var(--bord);border-radius:11px;color:var(--tx);font-family:var(--fm);font-size:13px;outline:none;transition:border-color .2s;}
+.tinp:focus{border-color:var(--c5);}
+.tinp.ok{border-color:var(--c2);color:var(--c2);}
+.tinp.ko{border-color:var(--c1);color:var(--c1);}
+.tacts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:13px;}
+.tfb{font-family:var(--fm);font-size:11px;margin-top:11px;min-height:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.tfb span{color:var(--dim);}
+.tfb strong{color:var(--c2);}
+.tsc{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+.tc{padding:6px 13px;background:var(--surf2);border:1px solid var(--bord);border-radius:16px;font-family:var(--fm);font-size:11px;color:var(--dim);}
+.tc .good{color:var(--c2);font-weight:700;} .tc .bad{color:var(--c1);font-weight:700;}
+
+/* ══ QCM ══ */
+.qcm-area{max-width:640px;margin:0 auto;}
+.qcard{background:var(--surf);border:2px solid var(--bord);border-radius:20px;padding:clamp(20px,5vw,38px);text-align:center;margin-bottom:18px;}
+.ql{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.qq{font-size:clamp(26px,7vw,52px);font-weight:900;color:var(--c6);letter-spacing:-2px;margin-bottom:5px;}
+.qh{font-family:var(--fm);font-size:11px;color:var(--dim);margin-bottom:22px;}
+/* QCM choices show BOTH pret+pp */
+.qchoices{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.qch{padding:clamp(12px,3vw,18px) 10px;background:var(--surf2);border:2px solid var(--bord);border-radius:13px;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.qch:hover:not(.dis){border-color:var(--c6);background:rgba(236,204,104,.07);}
+.qch.correct{border-color:var(--c2);background:rgba(46,213,115,.1);}
+.qch.wrong{border-color:var(--c1);background:rgba(255,71,87,.1);}
+.qch.dis{cursor:default;}
+/* inside choice: big pret + small pp */
+.qch .ch-pret{font-family:var(--fm);font-size:clamp(13px,2.5vw,16px);font-weight:700;color:var(--tx);}
+.qch .ch-pp{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:2px;}
+.qch.correct .ch-pret{color:var(--c2);}
+.qch.correct .ch-pp{color:rgba(46,213,115,.6);}
+.qch.wrong .ch-pret{color:var(--c1);}
+.qsc{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;}
+.qmodes{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:11px;}
+
+/* ══ PENDU ══ */
+.pendu-area{max-width:600px;margin:0 auto;}
+.pd-modes{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+.pd-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+.pd-hint{background:var(--surf);border:2px solid var(--bord);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.pdl{font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.pdfr{font-size:clamp(20px,5vw,34px);font-weight:900;color:var(--c7);letter-spacing:-1px;}
+.pdex{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:5px;}
+/* PENDU shows KNOWN partner form as hint */
+.pd-partner{display:inline-flex;align-items:center;gap:6px;background:rgba(123,237,159,.1);border:1px solid rgba(123,237,159,.3);border-radius:14px;padding:5px 12px;font-family:var(--fm);font-size:11px;color:var(--c7);margin-top:8px;}
+.pd-fig{text-align:center;margin-bottom:16px;}
+.pd-svg{width:clamp(110px,22vw,160px);height:auto;}
+.pd-word{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.pl{width:clamp(22px,5.5vw,36px);height:clamp(26px,6.5vw,42px);border-bottom:3px solid var(--dim);display:flex;align-items:flex-end;justify-content:center;font-family:var(--fm);font-size:clamp(14px,3.5vw,22px);font-weight:700;padding-bottom:2px;transition:all .2s;}
+.pl.rev{border-color:var(--c2);color:var(--c2);}
+.pl.wrev{border-color:var(--c1);color:var(--c1);}
+.pl.sp{border:none;width:12px;}
+.pd-kb{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;max-width:500px;margin-left:auto;margin-right:auto;}
+.pk{width:clamp(26px,6.5vw,38px);height:clamp(30px,7.5vw,42px);background:var(--surf2);border:1px solid var(--bord);border-radius:7px;font-family:var(--fm);font-size:clamp(10px,2.5vw,13px);font-weight:700;cursor:pointer;transition:all .15s;color:var(--tx);}
+.pk:hover:not(.uok):not(.uko){background:var(--c7);border-color:var(--c7);color:#000;}
+.pk.uok{background:rgba(123,237,159,.14);border-color:var(--c7);color:var(--c7);cursor:default;}
+.pk.uko{background:rgba(255,71,87,.1);border-color:var(--c1);color:var(--c1);cursor:default;}
+
+@media(max-width:500px){
+  .two-forms{grid-template-columns:1fr;}
+  .qchoices{grid-template-columns:1fr;}
+  .assoc-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">🎮 <span>Jeux</span> Verbes</div>
+    <div class="nav-games">
+      <button class="nb nb0 active" onclick="go('home',this)">🏠</button>
+      <button class="nb nb1" onclick="go('flash',this)">🃏 Flash</button>
+      <button class="nb nb2" onclick="go('assoc',this)">🔀 Assoc.</button>
+      <button class="nb nb3" onclick="go('sniper',this)">🎯 Sniper</button>
+      <button class="nb nb4" onclick="go('memory',this)">🧩 Memory</button>
+      <button class="nb nb5" onclick="go('chain',this)">🔗 Chaîne</button>
+      <button class="nb nb6" onclick="go('trans',this)">🌍 Trad.</button>
+      <button class="nb nb7" onclick="go('qcm',this)">🎲 QCM</button>
+      <button class="nb nb8" onclick="go('pendu',this)">💀 Pendu</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="home-hero">
+    <h1><span class="g">8 Jeux</span><br>Verbes<br>Irréguliers</h1>
+    <div class="sync-notice">🔗 Prétérit + Participe passé toujours ensemble — lien mémoire maximal</div>
+    <p>140 verbes · 8 jeux · 100% aléatoire</p>
+  </div>
+  <div class="games-grid">
+    <div class="gc gc1" onclick="go('flash',document.querySelector('.nb1'))"><div class="gi">🃏</div><div class="gt">Mémorisation</div><h3>Flash Cards</h3><p>Retourne la carte : infinitif, sens FR, prétérit ET participe affichés ensemble.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc2" onclick="go('assoc',document.querySelector('.nb2'))"><div class="gi">🔀</div><div class="gt">Association chrono</div><h3>Association Express</h3><p>Relie infinitif ↔ prét+PP ou FR ↔ formes anglaises. Chrono et score d'erreurs.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc3" onclick="go('sniper',document.querySelector('.nb3'))"><div class="gi">🎯</div><div class="gt">Réflexes</div><h3>Sniper</h3><p>Un mot tombe avec son prétérit ET participe. Clique la bonne paire avant le sol.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc4" onclick="go('memory',document.querySelector('.nb4'))"><div class="gi">🧩</div><div class="gt">Paires</div><h3>Memory Flip</h3><p>Infinitif ↔ paire prét+PP. Les 2 formes apparaissent sur la même carte.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc5" onclick="go('chain',document.querySelector('.nb5'))"><div class="gi">🔗</div><div class="gt">Ordonnancement</div><h3>Chaîne</h3><p>3 tuiles à placer : infinitif → prétérit → participe. Toujours les 3 formes.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc6" onclick="go('trans',document.querySelector('.nb6'))"><div class="gi">🌍</div><div class="gt">Traduction</div><h3>Traducteur Éclair</h3><p>FR → 3 formes EN (infinitif + prét + PP), ou EN → traduction + prét + PP.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc7" onclick="go('qcm',document.querySelector('.nb7'))"><div class="gi">🎲</div><div class="gt">Choix multiples</div><h3>QCM Éclair</h3><p>4 choix affichent chacun prét + PP. Tu vois toujours la paire complète.</p><div class="pb">Jouer →</div></div>
+    <div class="gc gc8" onclick="go('pendu',document.querySelector('.nb8'))"><div class="gi">💀</div><div class="gt">Orthographe</div><h3>Pendu</h3><p>Devine le prétérit lettre par lettre. Le participe partenaire est affiché en indice.</p><div class="pb">Jouer →</div></div>
+  </div>
+</div>
+
+<!-- FLASH -->
+<div id="s-flash" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c1)">🃏 Flash Cards</div><div class="gs"><div class="sc">✅ <span id="fc-kn">0</span></div><div class="sc">❌ <span id="fc-fo">0</span></div><div class="sc"><span id="fc-n">1</span>/<span id="fc-t">140</span></div></div></div>
+  <div class="pbar"><div class="pfill" id="fc-pr" style="width:0%;background:var(--c1)"></div></div>
+  <div class="flash-area">
+    <div class="flash-mode-btns">
+      <button class="mb active" onclick="setFCM('fr',this)">🇫🇷 FR → EN</button>
+      <button class="mb" onclick="setFCM('en',this)">🇬🇧 EN → Formes</button>
+    </div>
+    <div class="fcard" id="fc-card" onclick="flipFC()">
+      <div class="fc-f" id="fc-front"><div class="fc-prompt" id="fc-prom">SENS EN FRANÇAIS</div><div class="fc-word" id="fc-word"></div><div class="fc-sub">Tapez pour révéler →</div></div>
+      <div class="fc-b"><div class="fc-ans" id="fc-ans"></div></div>
+    </div>
+    <div class="rbtns" id="fc-rbtns" style="display:none;">
+      <button class="bpri" style="background:var(--c1);color:#fff" onclick="fcR(false)">❌ Pas su</button>
+      <button class="bpri" style="background:var(--c2);color:#000" onclick="fcR(true)">✅ Savais !</button>
+    </div>
+    <div class="fnav">
+      <button onclick="fcNav(-1)">◀</button>
+      <div class="fctr"><span id="fc-n2">1</span> / <span id="fc-t2">140</span></div>
+      <button onclick="fcNav(1)">▶</button>
+    </div>
+    <button class="bgho" onclick="initFlash()">🔀 Mélanger</button>
+  </div>
+</div>
+
+<!-- ASSOC -->
+<div id="s-assoc" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'));stopAssoc()">← Retour</button><div class="gtit" style="color:var(--c2)">🔀 Association Express</div></div>
+  <div id="assoc-start" class="assoc-start">
+    <div style="font-size:64px;margin-bottom:16px;">🔀</div>
+    <h2 style="font-size:clamp(20px,5vw,32px);font-weight:900;margin-bottom:10px;">Association Express</h2>
+    <p style="font-family:var(--fm);font-size:12px;color:var(--dim);max-width:400px;margin:0 auto 20px;line-height:1.9;">Clique un élément dans la colonne gauche, puis son équivalent à droite. Les deux formes (prétérit + PP) sont toujours visibles ensemble pour ancrer le lien mémoire.</p>
+    <div class="assoc-mbts">
+      <button class="mb active" id="am1" onclick="setAM('inf-both',this)">Infinitif ↔ Prét+PP</button>
+      <button class="mb" id="am2" onclick="setAM('fr-both',this)">FR ↔ Prét+PP</button>
+      <button class="mb" id="am3" onclick="setAM('fr-inf',this)">FR ↔ Infinitif EN</button>
+      <button class="mb" id="am4" onclick="setAM('mix',this)">🎲 Mix</button>
+    </div>
+    <button class="bpri" style="background:var(--c2);color:#000" onclick="startAssoc()">▶ Lancer !</button>
+  </div>
+  <div id="assoc-game" style="display:none;">
+    <div class="assoc-container">
+      <div class="assoc-top">
+        <div><div class="assoc-timer" id="a-timer">0.0s</div><div style="font-family:var(--fm);font-size:12px;color:var(--dim)">Paires : <span id="a-found" style="color:var(--c2);font-weight:700">0</span>/<span id="a-tot">10</span> &nbsp;Erreurs : <span id="a-err" style="color:var(--c1);font-weight:700">0</span></div></div>
+        <button class="bgho" onclick="startAssoc()">🔀 Nouveau set</button>
+      </div>
+      <div class="assoc-grid">
+        <div class="assoc-col"><div class="col-title" id="a-ltit">A</div><div id="a-left"></div></div>
+        <div class="assoc-col"><div class="col-title" id="a-rtit">B</div><div id="a-right"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SNIPER -->
+<div id="s-sniper" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'));stopSniper()">← Retour</button><div class="gtit" style="color:var(--c3)">🎯 Sniper</div><div class="gs"><div class="sc" id="sn-lc">❤️❤️❤️</div><div class="sc">🎯 <span id="sn-sc">0</span></div></div></div>
+  <div class="sn-target-area"><div style="font-family:var(--fm);font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:5px">PRÉTÉRIT + PP DE</div><div class="sn-target" id="sn-tg">—</div><div class="sn-sub" id="sn-sb"></div></div>
+  <div class="sn-arena" id="sn-arena"><div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;"><div style="font-size:52px;">🎯</div><button class="bpri" style="background:var(--c3);color:#000" onclick="startSniper()">▶ Démarrer</button></div></div>
+</div>
+
+<!-- MEMORY -->
+<div id="s-memory" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c4)">🧩 Memory Flip</div><div class="gs"><div class="sc">🔄 <span id="mm-mv">0</span></div><div class="sc">✅ <span id="mm-fd">0</span>/<span id="mm-tt">0</span></div></div></div>
+  <div class="mem-ctrl">
+    <button class="mb active" onclick="startMem(4,this)">🟢 4 paires</button>
+    <button class="mb" onclick="startMem(8,this)">🟡 8 paires</button>
+    <button class="mb" onclick="startMem(12,this)">🔴 12 paires</button>
+    <button class="bgho" style="margin-left:auto" onclick="startMem(memP,null)">🔀 Relancer</button>
+  </div>
+  <div class="mgrid" id="mgrid"></div>
+</div>
+
+<!-- CHAIN -->
+<div id="s-chain" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c8)">🔗 Chaîne</div><div class="gs"><div class="sc">✅ <span id="ch-sc">0</span></div><div class="sc"><span id="ch-idx">1</span>/<span id="ch-tot">140</span></div></div></div>
+  <div class="pbar"><div class="pfill" id="ch-pr" style="width:0%;background:var(--c8)"></div></div>
+  <div class="chain-area">
+    <div class="cvd"><div class="cvl">Place les 3 formes dans l'ordre</div><div class="cvw" id="ch-w"></div><div class="cvf" id="ch-f"></div></div>
+    <div class="ch-slots">
+      <div class="cslot" id="cs0" ondragover="aD(event)" ondrop="dT(event,0)" onclick="tS(0)"><div class="sl">Infinitif</div><div class="sv" id="csv0">—</div></div>
+      <div class="cslot" id="cs1" ondragover="aD(event)" ondrop="dT(event,1)" onclick="tS(1)"><div class="sl">Prétérit</div><div class="sv" id="csv1">—</div></div>
+      <div class="cslot" id="cs2" ondragover="aD(event)" ondrop="dT(event,2)" onclick="tS(2)"><div class="sl">Participe PP</div><div class="sv" id="csv2">—</div></div>
+    </div>
+    <div class="ctiles" id="ctiles"></div>
+    <div class="ch-btns">
+      <button class="bpri" style="background:var(--c8);color:#000" onclick="checkCh()">Vérifier ✓</button>
+      <button class="bgho" onclick="skipCh()">Passer →</button>
+      <button class="bgho" onclick="clearCh()">↺ Effacer</button>
+    </div>
+    <div id="ch-fb" style="text-align:center;font-family:var(--fm);font-size:12px;margin-top:10px;min-height:16px;color:var(--dim)"></div>
+  </div>
+</div>
+
+<!-- TRANS -->
+<div id="s-trans" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c5)">🌍 Traducteur Éclair</div></div>
+  <div class="tsc"><div class="tc">✅ <span class="good" id="tr-gd">0</span></div><div class="tc">❌ <span class="bad" id="tr-bd">0</span></div><div class="tc"><span id="tr-i">1</span>/<span id="tr-t">140</span></div></div>
+  <div class="pbar"><div class="pfill" id="tr-pr" style="width:0%;background:var(--c5)"></div></div>
+  <div class="trans-area">
+    <div class="tcard">
+      <div class="tdir" id="tr-dir">🇫🇷 Français → 🇬🇧 Anglais</div>
+      <div class="tql" id="tr-ql">SENS EN FRANÇAIS</div>
+      <div class="tq" id="tr-q"></div>
+      <div class="th" id="tr-h"></div>
+      <div class="tfields">
+        <div class="tfield"><label id="tr-l0">Infinitif anglais</label><input class="tinp" id="tr-inf" placeholder="to …" autocomplete="off" spellcheck="false" onkeydown="trK(event)"></div>
+        <div class="tfield"><label>Prétérit</label><input class="tinp" id="tr-pr" placeholder="prétérit…" autocomplete="off" spellcheck="false" onkeydown="trK(event)"></div>
+        <div class="tfield"><label>Participe passé</label><input class="tinp" id="tr-pp" placeholder="participe passé…" autocomplete="off" spellcheck="false" onkeydown="trK(event)"></div>
+      </div>
+      <div class="tacts">
+        <button class="bpri" style="background:var(--c5);color:#fff" onclick="checkTr()">Vérifier ✓</button>
+        <button class="bgho" onclick="skipTr()">Passer →</button>
+      </div>
+      <div class="tfb" id="tr-fb"></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+      <button class="mb" id="tr-mb" onclick="toggleTrMode()">🔄 Mode : FR→EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- QCM -->
+<div id="s-qcm" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c6)">🎲 QCM Éclair</div><div class="gs"><div class="sc">✅ <span id="qg">0</span></div><div class="sc">🔥 <span id="qs">0</span></div><div class="sc">🏆 <span id="qr">0</span></div></div></div>
+  <div class="pbar"><div class="pfill" id="qp" style="width:0%;background:var(--c6)"></div></div>
+  <div class="qcm-area">
+    <div class="qcard">
+      <div class="both-badge">🔗 Les 4 choix montrent prétérit + PP</div>
+      <div class="ql" id="q-lab">PRÉTÉRIT + PP DE</div>
+      <div class="qq" id="q-q"></div>
+      <div class="qh" id="q-h"></div>
+      <div class="qchoices" id="q-ch"></div>
+    </div>
+    <div class="qmodes">
+      <button class="mb active" onclick="setQM('pret',this)">Prét+PP</button>
+      <button class="mb" onclick="setQM('inf',this)">Infinitif</button>
+      <button class="mb" onclick="setQM('fr',this)">FR→EN</button>
+      <button class="mb" onclick="setQM('mix',this)">🎲 Mix</button>
+    </div>
+  </div>
+</div>
+
+<!-- PENDU -->
+<div id="s-pendu" class="screen">
+  <div class="gh"><button class="bk" onclick="go('home',document.querySelector('.nb0'))">← Retour</button><div class="gtit" style="color:var(--c7)">💀 Pendu</div><div class="gs"><div class="sc">✅ <span id="pw">0</span></div><div class="sc">💀 <span id="pl">0</span></div></div></div>
+  <div class="pendu-area">
+    <div class="pd-modes">
+      <button class="mb active" onclick="setPM('pret',this)">Prétérit</button>
+      <button class="mb" onclick="setPM('pp',this)">Participe PP</button>
+      <button class="mb" onclick="setPM('inf',this)">Infinitif</button>
+    </div>
+    <div class="pd-stats"><div class="ss">Erreurs : <span id="pd-e">0</span>/7</div><div class="ss"><span id="pd-i">1</span>/<span id="pd-t">140</span></div></div>
+    <div class="pd-hint">
+      <div class="pdl" id="pd-lab">SENS EN FRANÇAIS — PRÉTÉRIT</div>
+      <div class="pdfr" id="pd-fr"></div>
+      <div class="pdex" id="pd-ex"></div>
+      <div class="pd-partner" id="pd-partner" style="display:none">🔗 Partenaire : <strong id="pd-part-val"></strong></div>
+    </div>
+    <div class="pd-fig">
+      <svg class="pd-svg" viewBox="0 0 160 200" fill="none">
+        <line x1="20" y1="195" x2="140" y2="195" stroke="#2ed573" stroke-width="3"/>
+        <line x1="60" y1="195" x2="60" y2="10" stroke="#2ed573" stroke-width="3"/>
+        <line x1="60" y1="10" x2="110" y2="10" stroke="#2ed573" stroke-width="3"/>
+        <line x1="110" y1="10" x2="110" y2="35" stroke="#2ed573" stroke-width="3"/>
+        <circle id="pdh" cx="110" cy="50" r="15" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <line id="pdb" x1="110" y1="65" x2="110" y2="115" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <line id="pdla" x1="110" y1="80" x2="85" y2="100" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <line id="pdra" x1="110" y1="80" x2="135" y2="100" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <line id="pdll" x1="110" y1="115" x2="85" y2="145" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <line id="pdrl" x1="110" y1="115" x2="135" y2="145" stroke="#ff4757" stroke-width="3" style="display:none"/>
+        <text id="pdfc" x="103" y="55" font-size="14" fill="#ff4757" style="display:none">✕</text>
+      </svg>
+    </div>
+    <div class="pd-word" id="pd-wd"></div>
+    <div class="pd-kb" id="pd-kb"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:6px;">
+      <button class="bgho" onclick="newPG()">→ Prochain mot</button>
+    </div>
+  </div>
+</div>
+
+<div class="rov" id="rov"><div class="rbox"><div class="rn" id="rn" style="color:var(--c2)">0</div><div class="rl" id="rl"></div><div class="racts"><button class="bpri" id="rr" style="background:var(--c2);color:#000">↺ Rejouer</button><button class="bgho" onclick="hideR();go('home',document.querySelector('.nb0'))">🏠 Accueil</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════ DATA ═══════════
+const V=[
+  {i:"to be",p:"was/were",pp:"been",fr:"être"},{i:"to have",p:"had",pp:"had",fr:"avoir"},
+  {i:"to beat",p:"beat",pp:"beaten",fr:"battre"},{i:"to begin",p:"began",pp:"begun",fr:"commencer"},
+  {i:"to bend",p:"bent",pp:"bent",fr:"courber"},{i:"to blow",p:"blew",pp:"blown",fr:"souffler"},
+  {i:"to break",p:"broke",pp:"broken",fr:"briser"},{i:"to bring",p:"brought",pp:"brought",fr:"apporter"},
+  {i:"to build",p:"built",pp:"built",fr:"construire"},{i:"to burn",p:"burnt",pp:"burnt",fr:"brûler"},
+  {i:"to buy",p:"bought",pp:"bought",fr:"acheter"},{i:"to catch",p:"caught",pp:"caught",fr:"attraper"},
+  {i:"to choose",p:"chose",pp:"chosen",fr:"choisir"},{i:"to come",p:"came",pp:"come",fr:"venir"},
+  {i:"to cut",p:"cut",pp:"cut",fr:"couper"},{i:"to do",p:"did",pp:"done",fr:"faire"},
+  {i:"to draw",p:"drew",pp:"drawn",fr:"dessiner"},{i:"to drink",p:"drank",pp:"drunk",fr:"boire"},
+  {i:"to drive",p:"drove",pp:"driven",fr:"conduire"},{i:"to eat",p:"ate",pp:"eaten",fr:"manger"},
+  {i:"to fall",p:"fell",pp:"fallen",fr:"tomber"},{i:"to feel",p:"felt",pp:"felt",fr:"ressentir"},
+  {i:"to fight",p:"fought",pp:"fought",fr:"combattre"},{i:"to find",p:"found",pp:"found",fr:"trouver"},
+  {i:"to fly",p:"flew",pp:"flown",fr:"voler"},{i:"to forget",p:"forgot",pp:"forgotten",fr:"oublier"},
+  {i:"to get",p:"got",pp:"got",fr:"obtenir"},{i:"to give",p:"gave",pp:"given",fr:"donner"},
+  {i:"to go",p:"went",pp:"gone",fr:"aller"},{i:"to grow",p:"grew",pp:"grown",fr:"grandir"},
+  {i:"to hang",p:"hung",pp:"hung",fr:"accrocher"},{i:"to hear",p:"heard",pp:"heard",fr:"entendre"},
+  {i:"to hide",p:"hid",pp:"hidden",fr:"cacher"},{i:"to hold",p:"held",pp:"held",fr:"tenir"},
+  {i:"to keep",p:"kept",pp:"kept",fr:"garder"},{i:"to know",p:"knew",pp:"known",fr:"savoir"},
+  {i:"to lead",p:"led",pp:"led",fr:"mener"},{i:"to learn",p:"learnt",pp:"learnt",fr:"apprendre"},
+  {i:"to leave",p:"left",pp:"left",fr:"partir"},{i:"to let",p:"let",pp:"let",fr:"laisser"},
+  {i:"to lie",p:"lay",pp:"lain",fr:"être allongé"},{i:"to light",p:"lit",pp:"lit",fr:"allumer"},
+  {i:"to lose",p:"lost",pp:"lost",fr:"perdre"},{i:"to make",p:"made",pp:"made",fr:"fabriquer"},
+  {i:"to meet",p:"met",pp:"met",fr:"rencontrer"},{i:"to pay",p:"paid",pp:"paid",fr:"payer"},
+  {i:"to put",p:"put",pp:"put",fr:"mettre"},{i:"to read",p:"read",pp:"read",fr:"lire"},
+  {i:"to ride",p:"rode",pp:"ridden",fr:"chevaucher"},{i:"to ring",p:"rang",pp:"rung",fr:"sonner"},
+  {i:"to run",p:"ran",pp:"run",fr:"courir"},{i:"to say",p:"said",pp:"said",fr:"dire"},
+  {i:"to see",p:"saw",pp:"seen",fr:"voir"},{i:"to sell",p:"sold",pp:"sold",fr:"vendre"},
+  {i:"to send",p:"sent",pp:"sent",fr:"envoyer"},{i:"to shake",p:"shook",pp:"shaken",fr:"secouer"},
+  {i:"to shine",p:"shone",pp:"shone",fr:"briller"},{i:"to shoot",p:"shot",pp:"shot",fr:"tirer"},
+  {i:"to show",p:"showed",pp:"shown",fr:"montrer"},{i:"to shut",p:"shut",pp:"shut",fr:"fermer"},
+  {i:"to sing",p:"sang",pp:"sung",fr:"chanter"},{i:"to sit",p:"sat",pp:"sat",fr:"être assis"},
+  {i:"to sleep",p:"slept",pp:"slept",fr:"dormir"},{i:"to speak",p:"spoke",pp:"spoken",fr:"parler"},
+  {i:"to spend",p:"spent",pp:"spent",fr:"dépenser"},{i:"to spread",p:"spread",pp:"spread",fr:"étendre"},
+  {i:"to stand",p:"stood",pp:"stood",fr:"être debout"},{i:"to steal",p:"stole",pp:"stolen",fr:"voler"},
+  {i:"to stick",p:"stuck",pp:"stuck",fr:"coller"},{i:"to strike",p:"struck",pp:"struck",fr:"frapper"},
+  {i:"to swim",p:"swam",pp:"swum",fr:"nager"},{i:"to take",p:"took",pp:"taken",fr:"prendre"},
+  {i:"to teach",p:"taught",pp:"taught",fr:"enseigner"},{i:"to tear",p:"tore",pp:"torn",fr:"déchirer"},
+  {i:"to tell",p:"told",pp:"told",fr:"raconter"},{i:"to think",p:"thought",pp:"thought",fr:"penser"},
+  {i:"to throw",p:"threw",pp:"thrown",fr:"lancer"},{i:"to wake",p:"woke",pp:"woken",fr:"réveiller"},
+  {i:"to wear",p:"wore",pp:"worn",fr:"porter"},{i:"to win",p:"won",pp:"won",fr:"gagner"},
+  {i:"to write",p:"wrote",pp:"written",fr:"écrire"},{i:"to awake",p:"awoke",pp:"awoken",fr:"se réveiller"},
+  {i:"to bear",p:"bore",pp:"borne",fr:"supporter"},{i:"to bet",p:"bet",pp:"bet",fr:"parier"},
+  {i:"to bind",p:"bound",pp:"bound",fr:"lier"},{i:"to bite",p:"bit",pp:"bitten",fr:"mordre"},
+  {i:"to bleed",p:"bled",pp:"bled",fr:"saigner"},{i:"to breed",p:"bred",pp:"bred",fr:"élever"},
+  {i:"to cast",p:"cast",pp:"cast",fr:"jeter"},{i:"to cling",p:"clung",pp:"clung",fr:"s'accrocher"},
+  {i:"to cost",p:"cost",pp:"cost",fr:"coûter"},{i:"to creep",p:"crept",pp:"crept",fr:"ramper"},
+  {i:"to deal",p:"dealt",pp:"dealt",fr:"distribuer"},{i:"to dig",p:"dug",pp:"dug",fr:"creuser"},
+  {i:"to dream",p:"dreamt",pp:"dreamt",fr:"rêver"},{i:"to feed",p:"fed",pp:"fed",fr:"nourrir"},
+  {i:"to flee",p:"fled",pp:"fled",fr:"fuir"},{i:"to fling",p:"flung",pp:"flung",fr:"projeter"},
+  {i:"to forbid",p:"forbade",pp:"forbidden",fr:"interdire"},{i:"to freeze",p:"froze",pp:"frozen",fr:"geler"},
+  {i:"to grind",p:"ground",pp:"ground",fr:"moudre"},{i:"to hit",p:"hit",pp:"hit",fr:"frapper"},
+  {i:"to hurt",p:"hurt",pp:"hurt",fr:"blesser"},{i:"to kneel",p:"knelt",pp:"knelt",fr:"s'agenouiller"},
+  {i:"to knit",p:"knit",pp:"knit",fr:"tricoter"},{i:"to lay",p:"laid",pp:"laid",fr:"poser à plat"},
+  {i:"to lean",p:"leant",pp:"leant",fr:"s'appuyer"},{i:"to leap",p:"leapt",pp:"leapt",fr:"sauter"},
+  {i:"to lend",p:"lent",pp:"lent",fr:"prêter"},{i:"to mean",p:"meant",pp:"meant",fr:"signifier"},
+  {i:"to mow",p:"mowed",pp:"mown",fr:"faucher"},{i:"to rise",p:"rose",pp:"risen",fr:"s'élever"},
+  {i:"to saw",p:"sawed",pp:"sawn",fr:"scier"},{i:"to seek",p:"sought",pp:"sought",fr:"chercher"},
+  {i:"to set",p:"set",pp:"set",fr:"fixer"},{i:"to sew",p:"sewed",pp:"sewn",fr:"coudre"},
+  {i:"to shed",p:"shed",pp:"shed",fr:"verser"},{i:"to shrink",p:"shrank",pp:"shrunk",fr:"rétrécir"},
+  {i:"to sink",p:"sank",pp:"sunk",fr:"couler"},{i:"to slide",p:"slid",pp:"slid",fr:"glisser"},
+  {i:"to smell",p:"smelt",pp:"smelt",fr:"sentir"},{i:"to sow",p:"sowed",pp:"sown",fr:"semer"},
+  {i:"to spell",p:"spelt",pp:"spelt",fr:"épeler"},{i:"to spill",p:"spilt",pp:"spilt",fr:"renverser"},
+  {i:"to spin",p:"spun",pp:"spun",fr:"filer"},{i:"to spit",p:"spat",pp:"spat",fr:"cracher"},
+  {i:"to split",p:"split",pp:"split",fr:"fendre"},{i:"to spoil",p:"spoilt",pp:"spoilt",fr:"gâcher"},
+  {i:"to spring",p:"sprang",pp:"sprung",fr:"bondir"},{i:"to sting",p:"stung",pp:"stung",fr:"piquer"},
+  {i:"to stink",p:"stank",pp:"stunk",fr:"puer"},{i:"to strive",p:"strove",pp:"striven",fr:"s'efforcer"},
+  {i:"to swear",p:"swore",pp:"sworn",fr:"jurer"},{i:"to sweep",p:"swept",pp:"swept",fr:"balayer"},
+  {i:"to swell",p:"swelled",pp:"swollen",fr:"gonfler"},{i:"to swing",p:"swung",pp:"swung",fr:"se balancer"},
+  {i:"to thrust",p:"thrust",pp:"thrust",fr:"enfoncer"},{i:"to tread",p:"trod",pp:"trodden",fr:"fouler"},
+  {i:"to weave",p:"wove",pp:"woven",fr:"tisser"},{i:"to weep",p:"wept",pp:"wept",fr:"pleurer"},
+  {i:"to wring",p:"wrung",pp:"wrung",fr:"tordre"},
+];
+
+// helpers
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function norm(s){return s.trim().toLowerCase().replace(/\s*\(.*?\)/g,'').replace(/\s+/g,' ').split('/')[0].trim();}
+function matchV(inp,correct){return correct.split('/').map(s=>norm(s)).includes(norm(inp));}
+function p1(s){return s.split('/')[0].trim();}// first form
+
+let tmr;
+function toast(m,t='ok'){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t+' show';clearTimeout(tmr);tmr=setTimeout(()=>el.classList.remove('show'),1500);}
+function showR(n,l,fn,col='var(--c2)'){document.getElementById('rn').textContent=n;document.getElementById('rn').style.color=col;document.getElementById('rl').textContent=l;document.getElementById('rr').onclick=()=>{hideR();fn();};document.getElementById('rov').classList.add('show');}
+function hideR(){document.getElementById('rov').classList.remove('show');}
+
+function go(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  const inits={flash:initFlash,chain:initChain,trans:initTrans,qcm:initQCM,pendu:initPendu};
+  if(inits[id])inits[id]();
+  if(id==='memory')startMem(4,document.querySelector('.mem-ctrl .mb'));
+}
+
+// ═════════ FLASH ═════════
+let fcD=[],fcI=0,fcF=false,fcM='fr',fcKn=0,fcFo=0;
+function initFlash(){fcD=shuf([...V]);fcI=0;fcKn=0;fcFo=0;fcF=false;updFC();renderFC();}
+function setFCM(m,el){fcM=m;document.querySelectorAll('.flash-mode-btns .mb').forEach(b=>b.classList.remove('active'));el.classList.add('active');initFlash();}
+function renderFC(){
+  const v=fcD[fcI];
+  document.getElementById('fc-card').classList.remove('flipped');fcF=false;
+  document.getElementById('fc-rbtns').style.display='none';
+  if(fcM==='fr'){document.getElementById('fc-prom').textContent='SENS EN FRANÇAIS';document.getElementById('fc-word').textContent=v.fr;}
+  else{document.getElementById('fc-prom').textContent='INFINITIF ANGLAIS';document.getElementById('fc-word').textContent=v.i;}
+  // ALWAYS show BOTH pret + pp on the back
+  document.getElementById('fc-ans').innerHTML=`
+    <div class="fa-inf">${v.i} — ${v.fr}</div>
+    <div class="fa-pair">
+      <div class="fa-box pret"><div class="fl">Prétérit</div><div class="fv">${v.p}</div></div>
+      <div class="fa-box pp"><div class="fl">Participe PP</div><div class="fv">${v.pp}</div></div>
+    </div>
+    <div class="fc-fr">${fcM==='fr'?v.i:v.fr}</div>`;
+  updFC();
+}
+function flipFC(){if(fcF)return;fcF=true;document.getElementById('fc-card').classList.add('flipped');document.getElementById('fc-rbtns').style.display='flex';}
+function fcR(kn){if(kn)fcKn++;else fcFo++;if(!kn)fcD.push(fcD[fcI]);fcI++;if(fcI>=fcD.length){showR(fcKn,'cartes connues 🃏',initFlash);return;}renderFC();}
+function fcNav(d){fcI=Math.max(0,Math.min(fcD.length-1,fcI+d));renderFC();}
+function updFC(){document.getElementById('fc-kn').textContent=fcKn;document.getElementById('fc-fo').textContent=fcFo;document.getElementById('fc-n').textContent=fcI+1;document.getElementById('fc-t').textContent=fcD.length;document.getElementById('fc-n2').textContent=fcI+1;document.getElementById('fc-t2').textContent=fcD.length;document.getElementById('fc-pr').style.width=((fcI/fcD.length)*100)+'%';}
+
+// ═════════ ASSOCIATION ═════════
+let aMode='inf-both',aSel=null,aMatched=0,aErrors=0,aTmr=null,aStart=null,aTotal=10;
+function setAM(m,el){aMode=m;document.querySelectorAll('.assoc-mbts .mb').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+function stopAssoc(){clearInterval(aTmr);aTmr=null;}
+function startAssoc(){
+  stopAssoc();
+  document.getElementById('assoc-start').style.display='none';
+  document.getElementById('assoc-game').style.display='block';
+  aMatched=0;aErrors=0;aSel=null;
+  const m=aMode==='mix'?['inf-both','fr-both','fr-inf'][Math.floor(Math.random()*3)]:aMode;
+  const sample=shuf([...V]).slice(0,aTotal);
+  let leftItems,rightItems,lt,rt;
+  if(m==='inf-both'){
+    lt='INFINITIF'; rt='PRÉTÉRIT + PP';
+    leftItems=sample.map(v=>({pairId:v.i,mainText:v.i.replace('to ',''),subText:v.fr}));
+    // RIGHT shows BOTH forms together
+    rightItems=shuf(sample.map(v=>({pairId:v.i,mainText:p1(v.p),subText:'PP: '+p1(v.pp)})));
+  } else if(m==='fr-both'){
+    lt='FRANÇAIS'; rt='PRÉTÉRIT + PP';
+    leftItems=sample.map(v=>({pairId:v.i,mainText:v.fr,subText:v.i}));
+    rightItems=shuf(sample.map(v=>({pairId:v.i,mainText:p1(v.p),subText:'PP: '+p1(v.pp)})));
+  } else {
+    lt='FRANÇAIS'; rt='INFINITIF ANGLAIS';
+    leftItems=sample.map(v=>({pairId:v.i,mainText:v.fr,subText:''}));
+    rightItems=shuf(sample.map(v=>({pairId:v.i,mainText:v.i,subText:p1(v.p)+' / '+p1(v.pp)})));
+  }
+  document.getElementById('a-ltit').textContent=lt;document.getElementById('a-rtit').textContent=rt;
+  document.getElementById('a-tot').textContent=aTotal;document.getElementById('a-found').textContent=0;document.getElementById('a-err').textContent=0;
+  renderACol('a-left',leftItems,'L');renderACol('a-right',rightItems,'R');
+  aStart=Date.now();aTmr=setInterval(()=>{document.getElementById('a-timer').textContent=((Date.now()-aStart)/1000).toFixed(1)+'s';},100);
+}
+function renderACol(id,items,side){
+  const col=document.getElementById(id);col.innerHTML='';
+  items.forEach(item=>{
+    const d=document.createElement('div');d.className='aitem';d.dataset.pid=item.pairId;d.dataset.side=side;
+    d.innerHTML=`<div class="am">${item.mainText}</div>${item.subText?`<div class="ap">${item.subText}</div>`:''}`;
+    d.onclick=()=>aClick(d);col.appendChild(d);
+  });
+}
+function aClick(el){
+  if(el.classList.contains('matched'))return;
+  const side=el.dataset.side;
+  if(!aSel){
+    document.querySelectorAll(side==='L'?'#a-left .aitem':'#a-right .aitem').forEach(e=>e.classList.remove('sel'));
+    el.classList.add('sel');aSel={el,side,pid:el.dataset.pid};
+  } else {
+    if(aSel.side===side){document.querySelectorAll('.aitem.sel').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');aSel={el,side,pid:el.dataset.pid};return;}
+    const ok=aSel.pid===el.dataset.pid;
+    [aSel.el,el].forEach(e=>{
+      e.classList.remove('sel');
+      if(ok)e.classList.add('matched');
+      else{e.classList.add('wrong');setTimeout(()=>e.classList.remove('wrong','sel'),700);}
+    });
+    if(ok){aMatched++;document.getElementById('a-found').textContent=aMatched;toast('✅ Paire !','ok');
+      if(aMatched===aTotal){stopAssoc();const t=((Date.now()-aStart)/1000).toFixed(1);showR(t+'s','pour tout associer 🎉 ('+aErrors+' erreur'+(aErrors>1?'s':'')+')',startAssoc,'var(--c2)');}
+    } else {aErrors++;document.getElementById('a-err').textContent=aErrors;toast('❌ Faux !','ko');}
+    aSel=null;
+  }
+}
+
+// ═════════ SNIPER ═════════
+let snD=[],snI=0,snSc=0,snLv=3,snInv=null,snFIs=[],snV=null;
+function startSniper(){
+  snFIs.forEach(clearInterval);snFIs=[];
+  document.getElementById('sn-arena').innerHTML='';
+  snD=shuf([...V]);snI=0;snSc=0;snLv=3;document.getElementById('sn-sc').textContent=0;updSnLv();nextSn();
+  snInv=setInterval(spawnSn,2100);
+}
+function stopSniper(){clearInterval(snInv);snInv=null;snFIs.forEach(clearInterval);snFIs=[];}
+function updSnLv(){document.getElementById('sn-lc').textContent='❤️'.repeat(snLv)||'💀';}
+function nextSn(){if(snI>=snD.length)snD=shuf([...V]),snI=0;snV=snD[snI++];document.getElementById('sn-tg').textContent=snV.i;document.getElementById('sn-sb').textContent=snV.fr;}
+function spawnSn(){
+  if(!snV||!snInv)return;
+  const arena=document.getElementById('sn-arena');
+  const isC=Math.random()>.45;
+  let pret,pp;
+  if(isC){pret=p1(snV.p);pp=p1(snV.pp);}
+  else{const d=shuf(snD.filter(x=>x.i!==snV.i))[0];pret=p1(d.p);pp=p1(d.pp);}
+  const el=document.createElement('div');el.className='fw';
+  // BOTH forms visible on the falling item
+  el.innerHTML=`<span class="fw-pret">${pret}</span><span class="fw-pp">${pp}</span>`;
+  el.style.left=Math.max(6,Math.random()*(arena.clientWidth-130))+'px';el.style.top='-70px';
+  arena.appendChild(el);
+  let top=-70;const spd=2.0+(snSc*.05);
+  const fi=setInterval(()=>{top+=spd;el.style.top=top+'px';
+    if(top>arena.clientHeight){clearInterval(fi);el.remove();
+      if(isC){snLv--;updSnLv();toast('💔 Raté ! '+pret+' / '+pp,'ko');
+        if(snLv<=0){stopSniper();showR(snSc,'🎯 Score final',startSniper,'var(--c3)');}else nextSn();}
+    }},20);
+  snFIs.push(fi);
+  el.addEventListener('click',()=>{clearInterval(fi);el.remove();
+    if(isC){snSc++;document.getElementById('sn-sc').textContent=snSc;toast('🎯 +1','ok');nextSn();}
+    else{snLv--;updSnLv();toast('💔 Faux !','ko');if(snLv<=0){stopSniper();showR(snSc,'🎯 Score final',startSniper,'var(--c3)');}}
+  });
+}
+
+// ═════════ MEMORY ═════════
+let memP=4,memC=[],memF=[],memMt=0,memMv=0,memLk=false;
+function startMem(pairs,btn){
+  memP=pairs;memMt=0;memMv=0;memF=[];memLk=false;
+  if(btn){document.querySelectorAll('.mem-ctrl .mb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.getElementById('mm-mv').textContent=0;document.getElementById('mm-fd').textContent=0;document.getElementById('mm-tt').textContent=pairs;
+  const sel=shuf([...V]).slice(0,pairs);
+  // LEFT: infinitif, RIGHT: pret+pp pair
+  memC=shuf([
+    ...sel.map((v,i)=>({id:i,type:'inf',text:v.i.replace('to ',''),pair:i})),
+    ...sel.map((v,i)=>({id:i+pairs,type:'both',pretText:p1(v.p),ppText:p1(v.pp),pair:i}))
+  ]);
+  const grid=document.getElementById('mgrid');
+  grid.className='mgrid '+(pairs<=4?'g4':pairs<=8?'g8':'g12');
+  grid.innerHTML=memC.map((c,idx)=>`
+    <div class="mcard" id="mc${idx}" onclick="flipMem(${idx})">
+      <div class="mf"><div class="mi">🔤</div></div>
+      <div class="mb">
+        <div class="mct">${c.type==='inf'?'INFINITIF':'PRÉT + PP'}</div>
+        <div class="mcv">${c.type==='inf'?c.text:`<span class="pret-c">${c.pretText}</span><br><span class="pp-c">${c.ppText}</span>`}</div>
+      </div>
+    </div>`).join('');
+}
+function flipMem(idx){
+  if(memLk)return;const el=document.getElementById('mc'+idx);
+  if(el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  el.classList.add('flipped');memF.push(idx);
+  if(memF.length===2){
+    memMv++;document.getElementById('mm-mv').textContent=memMv;memLk=true;
+    const[a,b]=memF;
+    if(memC[a].pair===memC[b].pair&&memC[a].type!==memC[b].type){
+      setTimeout(()=>{document.getElementById('mc'+a).classList.add('matched');document.getElementById('mc'+b).classList.add('matched');memMt++;document.getElementById('mm-fd').textContent=memMt;toast('✅ Paire !','ok');memF=[];memLk=false;if(memMt===memP)showR(memMv,'coups 🧩',()=>startMem(memP,null),'var(--c4)');},400);
+    }else{setTimeout(()=>{document.getElementById('mc'+a).classList.remove('flipped');document.getElementById('mc'+b).classList.remove('flipped');memF=[];memLk=false;},850);}
+  }
+}
+
+// ═════════ CHAIN ═════════
+let chD=[],chI=0,chS=0,chSl=[null,null,null],chSel=null;
+function initChain(){chD=shuf([...V]);chI=0;chS=0;document.getElementById('ch-sc').textContent=0;renderChain();}
+function renderChain(){
+  if(chI>=chD.length){showR(chS,'verbes corrects 🔗',initChain,'var(--c8)');return;}
+  const v=chD[chI];chSl=[null,null,null];chSel=null;
+  document.getElementById('ch-w').textContent='';document.getElementById('ch-f').textContent='Sens : '+v.fr;
+  document.getElementById('ch-idx').textContent=chI+1;document.getElementById('ch-tot').textContent=chD.length;
+  document.getElementById('ch-pr').style.width=((chI/chD.length)*100)+'%';
+  document.getElementById('ch-fb').textContent='';
+  [0,1,2].forEach(i=>{document.getElementById('cs'+i).className='cslot';document.getElementById('csv'+i).textContent='—';});
+  const forms=shuf([
+    {label:v.i.replace('to ',''),full:v.i,pos:0,sub:''},
+    {label:p1(v.p),full:v.p,pos:1,sub:'prétérit'},
+    {label:p1(v.pp),full:v.pp,pos:2,sub:'PP'}
+  ]);
+  document.getElementById('ctiles').innerHTML=forms.map((f,i)=>`
+    <div class="ctile" id="ct${i}" draggable="true" ondragstart="dS(event,${i})" onclick="tTile(${i})" data-pos="${f.pos}" data-full="${f.full}">
+      ${f.label}${f.sub?`<div class="ct-sub">${f.sub}</div>`:''}
+    </div>`).join('');
+}
+function dS(e,i){document.getElementById('ct'+i).classList.add('dragging');e.dataTransfer.setData('text',i);}
+function aD(e){e.preventDefault();e.target.closest('.cslot')?.classList.add('drag-over');}
+function dT(e,si){e.preventDefault();e.target.closest('.cslot')?.classList.remove('drag-over');placeTile(parseInt(e.dataTransfer.getData('text')),si);}
+function tTile(i){const t=document.getElementById('ct'+i);if(t.classList.contains('used'))return;if(chSel===i){chSel=null;t.classList.remove('selected');return;}document.querySelectorAll('.ctile').forEach(x=>x.classList.remove('selected'));chSel=i;t.classList.add('selected');}
+function tS(si){if(chSel===null)return;placeTile(chSel,si);chSel=null;}
+function placeTile(ti,si){
+  const t=document.getElementById('ct'+ti);if(!t||t.classList.contains('used'))return;
+  if(chSl[si]!==null){const prev=document.getElementById('ct'+chSl[si]);if(prev)prev.classList.remove('used','selected');}
+  chSl[si]=ti;t.classList.add('used');t.classList.remove('selected');
+  document.getElementById('cs'+si).className='cslot filled';
+  // show label only (first line)
+  document.getElementById('csv'+si).textContent=t.childNodes[0].textContent.trim();
+}
+function clearCh(){chSl=[null,null,null];document.querySelectorAll('.ctile').forEach(t=>t.classList.remove('used','selected'));[0,1,2].forEach(i=>{document.getElementById('cs'+i).className='cslot';document.getElementById('csv'+i).textContent='—';});chSel=null;}
+function checkCh(){
+  if(chSl.includes(null)){toast('Place les 3 !','ko');return;}
+  const v=chD[chI];const exp=[v.i,v.p,v.pp];let ok=true;
+  chSl.forEach((ti,si)=>{const t=document.getElementById('ct'+ti);const isOk=exp[si].split('/').map(s=>norm(s)).includes(norm(t.dataset.full));document.getElementById('cs'+si).className='cslot '+(isOk?'correct':'wrong');if(!isOk)ok=false;});
+  if(ok){chS++;document.getElementById('ch-sc').textContent=chS;toast('🔗 Parfait !','ok');chI++;setTimeout(renderChain,650);}
+  else{document.getElementById('ch-fb').innerHTML=`Correct : <strong style="color:var(--c2)">${v.i} → ${v.p} → ${v.pp}</strong>`;setTimeout(()=>{chI++;renderChain();},1900);}
+}
+function skipCh(){chI++;renderChain();}
+
+// ═════════ TRANS ═════════
+let trD=[],trI=0,trG=0,trB=0,trMode='fr2en';
+function initTrans(){trD=shuf([...V]);trI=0;trG=0;trB=0;updTr();renderTr();}
+function toggleTrMode(){trMode=trMode==='fr2en'?'en2fr':'fr2en';document.getElementById('tr-mb').textContent='🔄 Mode : '+(trMode==='fr2en'?'FR→EN':'EN→FR');initTrans();}
+function renderTr(){
+  if(trI>=trD.length){showR(trG,'bonnes traductions 🌍',initTrans,'var(--c5)');return;}
+  const v=trD[trI];
+  document.getElementById('tr-pr').style.width=((trI/trD.length)*100)+'%';document.getElementById('tr-i').textContent=trI+1;
+  ['tr-inf','tr-pr','tr-pp'].forEach(id=>{const el=document.getElementById(id);el.value='';el.className='tinp';});
+  document.getElementById('tr-fb').innerHTML='';
+  if(trMode==='fr2en'){document.getElementById('tr-dir').textContent='🇫🇷 Français → 🇬🇧 Anglais';document.getElementById('tr-ql').textContent='SENS EN FRANÇAIS — DONNE LES 3 FORMES';document.getElementById('tr-q').textContent=v.fr.toUpperCase();document.getElementById('tr-h').textContent='';document.getElementById('tr-l0').textContent='Infinitif anglais';}
+  else{document.getElementById('tr-dir').textContent='🇬🇧 Anglais → Trad. + formes';document.getElementById('tr-ql').textContent='INFINITIF ANGLAIS — TRADUIS + PRÉT + PP';document.getElementById('tr-q').textContent=v.i.toUpperCase();document.getElementById('tr-h').textContent=v.fr;document.getElementById('tr-l0').textContent='Traduction française';}
+  document.getElementById('tr-inf').focus();
+}
+function trK(e){if(e.key==='Enter'){const ids=['tr-inf','tr-pr','tr-pp'];const ci=ids.indexOf(document.activeElement.id);if(ci<2)document.getElementById(ids[ci+1]).focus();else checkTr();}}
+function checkTr(){
+  const v=trD[trI];
+  const inf=document.getElementById('tr-inf').value,pret=document.getElementById('tr-pr').value,pp=document.getElementById('tr-pp').value;
+  let ok0,ok1=matchV(pret,v.p),ok2=matchV(pp,v.pp);
+  if(trMode==='fr2en')ok0=matchV(inf,v.i)||norm(inf)===norm(v.i.replace('to ',''));
+  else ok0=norm(inf).split(' ').some(w=>norm(v.fr).includes(w))||norm(inf)===norm(v.fr);
+  document.getElementById('tr-inf').className='tinp '+(ok0?'ok':'ko');
+  document.getElementById('tr-pr').className='tinp '+(ok1?'ok':'ko');
+  document.getElementById('tr-pp').className='tinp '+(ok2?'ok':'ko');
+  if(ok0&&ok1&&ok2)trG++;else trB++;updTr();
+  document.getElementById('tr-fb').innerHTML=`<span>INF: <strong>${v.i}</strong></span><span>PRÉT: <strong>${v.p}</strong></span><span>PP: <strong>${v.pp}</strong></span><span>FR: <strong>${v.fr}</strong></span>`;
+  toast((ok0&&ok1&&ok2)?'🌍 Parfait !':'❌ Voir correction',(ok0&&ok1&&ok2)?'ok':'ko');
+  setTimeout(()=>{trI++;renderTr();},(ok0&&ok1&&ok2)?750:2100);
+}
+function skipTr(){trI++;renderTr();}
+function updTr(){document.getElementById('tr-gd').textContent=trG;document.getElementById('tr-bd').textContent=trB;document.getElementById('tr-i').textContent=trI+1;}
+
+// ═════════ QCM — choices always show BOTH forms ═════════
+let qD=[],qI=0,qG=0,qStr=0,qRec=0,qMd='pret',qLk=false;
+function initQCM(){qD=shuf([...V]);qI=0;qG=0;qStr=0;qRec=0;qLk=false;['qg','qs','qr'].forEach(id=>document.getElementById(id).textContent=0);renderQCM();}
+function setQM(m,el){qMd=m;document.querySelectorAll('.qmodes .mb').forEach(b=>b.classList.remove('active'));el.classList.add('active');initQCM();}
+function renderQCM(){
+  if(qI>=qD.length){showR(qG,'bonnes réponses 🎲',initQCM,'var(--c6)');return;}
+  qLk=false;const v=qD[qI];
+  const m=qMd==='mix'?['pret','inf','fr'][Math.floor(Math.random()*3)]:qMd;
+  let question,hint;
+  if(m==='pret'||m==='inf'){question=m==='pret'?v.i+' →':v.fr+' →';hint=m==='pret'?v.fr:'Inf: '+v.i;}
+  else{question=v.fr.toUpperCase();hint='Infinitif : '+v.i;}
+  document.getElementById('q-lab').textContent=m==='fr'?'INFINITIF + FORMES DE':'PRÉTÉRIT + PP DE';
+  document.getElementById('q-q').textContent=question;document.getElementById('q-h').textContent=hint;
+  document.getElementById('qp').style.width=((qI/qD.length)*100)+'%';
+  // Build choices — each shows BOTH pret+pp
+  const others=shuf(qD.filter(x=>x.i!==v.i)).slice(0,3);
+  const allChoices=shuf([v,...others]);
+  document.getElementById('q-ch').innerHTML=allChoices.map(c=>`
+    <div class="qch" onclick="checkQCM(this,'${c.i.replace(/'/g,"\\'")}','${v.i.replace(/'/g,"\\'")}')">
+      <div class="ch-pret">${p1(c.p)}</div>
+      <div class="ch-pp">PP: ${p1(c.pp)}</div>
+    </div>`).join('');
+}
+function checkQCM(el,chosen,correct){
+  if(qLk)return;qLk=true;
+  const ok=chosen===correct;
+  document.querySelectorAll('.qch').forEach(b=>{b.classList.add('dis');if(b.onclick&&b.getAttribute('onclick').includes(correct.replace(/'/g,"\\'")))b.classList.add('correct');});
+  if(!ok)el.classList.add('wrong');
+  if(ok){qG++;qStr++;if(qStr>qRec)qRec=qStr;toast('🎲 +1','ok');}else{qStr=0;toast('❌','ko');}
+  document.getElementById('qg').textContent=qG;document.getElementById('qs').textContent=qStr;document.getElementById('qr').textContent=qRec;
+  setTimeout(()=>{qI++;renderQCM();},ok?550:1500);
+}
+
+// ═════════ PENDU — partner form shown as hint ═════════
+const PDP=['pdh','pdb','pdla','pdra','pdll','pdrl','pdfc'];
+let pdD=[],pdI=0,pdW=0,pdL=0,pdMd='pret',pdWord='',pdGuessed=[],pdErrors=0;
+function initPendu(){pdD=shuf([...V]);pdI=0;pdW=0;pdL=0;document.getElementById('pw').textContent=0;document.getElementById('pl').textContent=0;newPG();}
+function setPM(m,el){pdMd=m;document.querySelectorAll('.pd-modes .mb').forEach(b=>b.classList.remove('active'));el.classList.add('active');initPendu();}
+function newPG(){
+  if(pdI>=pdD.length)pdD=shuf([...V]),pdI=0;
+  const v=pdD[pdI++];
+  // word to guess
+  pdWord=pdMd==='pret'?p1(v.p).toLowerCase():pdMd==='pp'?p1(v.pp).toLowerCase():v.i.replace('to ','').trim().toLowerCase();
+  // partner = the OTHER form (always show it as hint to create the link)
+  const partner=pdMd==='pret'?'PP : '+p1(v.pp):pdMd==='pp'?'Prét : '+p1(v.p):'Prét : '+p1(v.p)+' / PP : '+p1(v.pp);
+  pdGuessed=[];pdErrors=0;
+  const lbl=pdMd==='pret'?'DEVINE LE PRÉTÉRIT':pdMd==='pp'?'DEVINE LE PARTICIPE PP':'DEVINE L\'INFINITIF (sans "to")';
+  document.getElementById('pd-lab').textContent=lbl;
+  document.getElementById('pd-fr').textContent=v.fr.toUpperCase();
+  document.getElementById('pd-ex').textContent=pdMd!=='inf'?'Infinitif : '+v.i:'';
+  // ALWAYS show the partner form — creates the memory link
+  document.getElementById('pd-partner').style.display='inline-flex';
+  document.getElementById('pd-part-val').textContent=partner;
+  document.getElementById('pd-i').textContent=pdI;document.getElementById('pd-t').textContent=pdD.length;
+  PDP.forEach(id=>document.getElementById(id).style.display='none');
+  renderPdW();buildPdKB();document.getElementById('pd-e').textContent=0;
+}
+function renderPdW(){
+  const wd=document.getElementById('pd-wd');wd.innerHTML='';
+  for(const ch of pdWord){
+    if(ch===' '){const s=document.createElement('div');s.className='pl sp';wd.appendChild(s);}
+    else{const d=document.createElement('div');d.className='pl'+(pdGuessed.includes(ch)?' rev':'');d.textContent=pdGuessed.includes(ch)?ch:'';wd.appendChild(d);}
+  }
+}
+function buildPdKB(){
+  const kb=document.getElementById('pd-kb');kb.innerHTML='';
+  'abcdefghijklmnopqrstuvwxyz'.split('').forEach(l=>{
+    const b=document.createElement('button');b.className='pk';b.textContent=l;b.id='pk'+l;
+    b.onclick=()=>pdGuess(l);kb.appendChild(b);
+  });
+}
+function pdGuess(l){
+  const btn=document.getElementById('pk'+l);if(!btn||btn.classList.contains('uok')||btn.classList.contains('uko'))return;
+  if(pdWord.includes(l)){pdGuessed.push(l);btn.classList.add('uok');renderPdW();
+    const done=[...new Set(pdWord.split('').filter(c=>c!==' '))].every(c=>pdGuessed.includes(c));
+    if(done){pdW++;document.getElementById('pw').textContent=pdW;toast('🎉 Bravo !','ok');setTimeout(newPG,1100);}
+  }else{pdErrors++;btn.classList.add('uko');if(pdErrors<=PDP.length)document.getElementById(PDP[pdErrors-1]).style.display='';document.getElementById('pd-e').textContent=pdErrors;
+    if(pdErrors>=7){pdL++;document.getElementById('pl').textContent=pdL;toast('💀 C\'était : '+pdWord,'ko');
+      document.querySelectorAll('.pl:not(.sp):not(.rev)').forEach(el=>el.classList.add('wrev'));
+      setTimeout(newPG,2000);}
+  }
+}
+
+// INIT
+initFlash();startMem(4,document.querySelector('.mem-ctrl .mb'));
+</script>
+</body>
+</html>
